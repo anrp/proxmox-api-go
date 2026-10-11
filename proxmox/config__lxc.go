@@ -31,6 +31,7 @@ type ConfigLxc struct {
 	Hostname           string      `json:"hostname,omitempty"`
 	IgnoreUnpackErrors bool        `json:"ignore-unpack-errors,omitempty"`
 	Lock               string      `json:"lock,omitempty"`
+	Lxc                [][]string  `json:"lxc,omitempty"`
 	Memory             int         `json:"memory"`
 	Mountpoints        QemuDevices `json:"mountpoints,omitempty"`
 	Nameserver         string      `json:"nameserver,omitempty"`
@@ -155,6 +156,10 @@ func NewConfigLxcFromApi(ctx context.Context, vmr *VmRef, client *Client) (confi
 	lock := ""
 	if _, isSet := lxcConfig["lock"]; isSet {
 		lock = lxcConfig["lock"].(string)
+	}
+	lxc := [][]string{}
+	if _, isSet := lxcConfig["lxc"]; isSet {
+		lxc = lxcConfig["lxc"].([][]string)
 	}
 	memory := 512
 	if _, isSet := lxcConfig["memory"]; isSet {
@@ -304,6 +309,7 @@ func NewConfigLxcFromApi(ctx context.Context, vmr *VmRef, client *Client) (confi
 	config.Hookscript = hookscript
 	config.Hostname = hostname
 	config.Lock = lock
+	config.Lxc = lxc
 	config.Memory = memory
 	config.Nameserver = nameserver
 	config.OnBoot = onboot
